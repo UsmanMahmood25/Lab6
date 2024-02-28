@@ -2,8 +2,8 @@
 =========================================================
 Name        : lab6_exe_D.html
 Assignment  : Lab 6, Exercise D
-Author(s)   : Usman Mahmood, Deven Powell
-Submission  : Feb 28, 2024
+Author(s)   : Deven Powell, Usman Mahmood
+Submission  : Febuary 28, 2024
 Description : API Usage.
 =========================================================
 -->
@@ -47,12 +47,43 @@ Description : API Usage.
     <script>
         // Function to fetch and display students
         async function fetchStudents() {
-            
+            const apiUrl = 'https://65df888eff5e305f32a26bad.mockapi.io/students';
+            const studentList = document.getElementById('studentList'); 
+        
+            try {
+                const response = await fetch(apiUrl);
+                const students = await response.json();
+        
+                students.forEach(student => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = student.name;
+                    listItem.onclick = () => fetchCourses(student.id);
+                    studentList.appendChild(listItem);
+                });
+            } catch (error) {
+                console.error('Error fetching students:', error);
+            }
         }
-
+        
         // Function to fetch and display courses for a student
         async function fetchCourses(studentId) {
+            const apiUrl = `https://65df888eff5e305f32a26bad.mockapi.io/students/${studentId}/courses`;
+            const courseContainer = document.getElementById('courseList');
             
+            try {
+                const response = await fetch(apiUrl);
+                const courses = await response.json();
+                
+                courseContainer.innerHTML = ''; // Clear previous courses before adding new ones
+        
+                courses.forEach(course => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${course.name} (Unit: ${course.unit})`;
+                    courseContainer.appendChild(listItem);
+                });
+            } catch (error) {
+                console.error(`Error fetching courses for student ${studentId}:`, error);
+            }
         }
 
         // Fetch students on window load
